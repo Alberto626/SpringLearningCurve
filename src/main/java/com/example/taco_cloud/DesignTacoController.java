@@ -47,13 +47,13 @@ public class DesignTacoController {
     public Taco taco() {
         return new Taco();
     }
+
     @GetMapping()
     public String showDesignForm() {
         return "design"; //return name of view
     }
     private Iterable<Ingredient> filterByType(
-            List<Ingredient> ingredients, Type type
-    ) {
+            List<Ingredient> ingredients, Type type) {
         return ingredients
                 .stream()
                 .filter(x-> x.getType().equals(type)) //get all types that match parameter type
