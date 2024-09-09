@@ -1,12 +1,15 @@
-package com.example.taco_cloud;
+package com.example.taco_cloud.web;
 
+import com.example.taco_cloud.Ingredient;
+import com.example.taco_cloud.Taco;
+import com.example.taco_cloud.TacoOrder;
+import com.example.taco_cloud.Type;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.Errors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,5 +61,17 @@ public class DesignTacoController {
                 .stream()
                 .filter(x-> x.getType().equals(type)) //get all types that match parameter type
                 .collect(Collectors.toList()); //return a list of all desired types
+    }
+    @PostMapping()
+    public String processTaco(
+            @Valid Taco taco,//tell spring to validate our Taco object after its binded
+            Errors errors,//This Errors object will have our validation details
+            @ModelAttribute TacoOrder tacoOrder) {//ModelAttribute is say that it should use the function order() because of the @modelAttribute annotation
+        if(errors.hasErrors()) {
+            return "design";
+        }
+        tacoOrder.addTaco(taco);
+        log.info("Processing too: {}", taco);
+        return "redirect:/orders/current";
     }
 }
